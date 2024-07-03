@@ -335,7 +335,7 @@ class UMP(object):
             if cls._lib_path is not None:
                 return ctypes.windll.LoadLibrary(os.path.join(cls._lib_path, "libum"))
 
-            with contextlib.suppress(OSError):
+            with contextlib.suppress(OSError, AttributeError):
                 return ctypes.windll.libum
             return ctypes.windll.LoadLibrary(os.path.join(path, "libum"))
         else:
