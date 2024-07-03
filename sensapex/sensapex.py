@@ -790,7 +790,7 @@ class UMP(object):
                     else:
                         self._last_move.pop(dev)
                         move.finish()
-                except Exception as exc:
+                except Exception:
                     print(f"Error processing move on sensapex device {dev}")
                     sys.excepthook(*sys.exc_info())
 

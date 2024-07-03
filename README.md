@@ -124,6 +124,9 @@ Thanks to the following for contributions:
 
 ### Changelog
 
+#### 1.400.1
+* Handle new python behavior https://github.com/python/cpython/issues/78997 (thanks @jhuhtamaki!)
+
 #### 1.400.0
 * Update to latest driver
 * Accuracy test for 4-axis devices (ignoring the 4th axis)
