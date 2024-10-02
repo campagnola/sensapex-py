@@ -187,7 +187,16 @@ class MoveRequest(object):
             self._moves = (self._movement_args(max_acceleration, dest4, speed, simultaneous),)
         else:
             self.estimated_duration = sum(np.array(diff) / speed[: len(diff)])
-            if self.start_pos[0] < dest4[0]:  # starting behind the dest means insertion
+            if ump.get_device(dev).is_stage:
+                self._moves = (
+                    self._movement_args(
+                        max_acceleration, (dest4[0], float("nan"), float("nan"), float("nan")), speed, simultaneous),
+                    self._movement_args(
+                        max_acceleration, (float("nan"), dest4[1], float("nan"), float("nan")), speed, simultaneous),
+                    self._movement_args(
+                        max_acceleration, dest4, speed, simultaneous),
+                )
+            elif self.start_pos[0] < dest4[0]:  # manipulator starting behind the dest means insertion
                 just_y = dest4[:]
                 just_y[0] = float("nan")
                 just_y[2] = float("nan")
@@ -198,7 +207,7 @@ class MoveRequest(object):
                     self._movement_args(max_acceleration, just_yz, speed, simultaneous),
                     self._movement_args(max_acceleration, dest4, speed, simultaneous),
                 )
-            else:  # extraction
+            else:  # manipulator extraction
                 # TODO handle nan for x, as well as start == dest?
                 just_x = dest4[:]
                 just_x[1] = float("nan")
@@ -604,7 +613,7 @@ class UMP(object):
 
     @staticmethod
     def is_positionable(dev_id):
-        return dev_id != 30
+        return dev_id < 30
 
     def get_pos(self, dev, timeout=0):
         """Return the absolute position of the specified device (in um).
@@ -836,8 +845,9 @@ class SensapexDevice(object):
         dev.goto_pos(pos, speed=10)
     """
 
-    def __init__(self, dev_id: int, callback=None, n_axes=None, max_acceleration=0):
+    def __init__(self, dev_id: int, callback=None, n_axes=None, max_acceleration=0, is_stage=None):
         self.dev_id = dev_id
+        self._is_stage = is_stage
         self.ump = UMP.get_ump()
 
         # Save max acceleration from config
@@ -875,6 +885,12 @@ class SensapexDevice(object):
         return self.ump.goto_pos(
             self.dev_id, pos, speed, simultaneous=simultaneous, linear=linear, max_acceleration=max_acceleration
         )
+
+    @property
+    def is_stage(self):
+        if self._is_stage is not None:
+            return self._is_stage
+        return self.dev_id >= 20 and self.ump.is_positionable(self.dev_id)
 
     def is_busy(self):
         return self.ump.is_busy(self.dev_id)
