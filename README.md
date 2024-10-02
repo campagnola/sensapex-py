@@ -124,6 +124,10 @@ Thanks to the following for contributions:
 
 ### Changelog
 
+#### 1.400.2
+* Bugfix for non-simultaneous moves on stages
+* SensapexDevice.is_stage is now available (and can be overridden with an init arg)
+
 #### 1.400.1
 * Handle new python behavior https://github.com/python/cpython/issues/78997 (thanks @jhuhtamaki!)
 
