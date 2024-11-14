@@ -395,17 +395,17 @@ class UMP(object):
         self._dev_ids_seen = set()
         self._set_debug_mode(self._debug)
 
-        min_version = (1, 21)
+        min_version = (1, 32)
         max_version = (1, 400)
         version_str = self.sdk_version()
         version = tuple(map(int, version_str.lstrip(b"v").split(b".")))
 
         if version < min_version:
-            min_version_str = "v{:d}.{:d}".format(*min_version)
-            raise RuntimeError(f"SDK version {min_version_str} or later required (your version is {version_str})")
+            min_version_str = "v{:d}.{:03d}".format(*min_version)
+            raise RuntimeError(f"SDK version {min_version_str} or later required (your version is {version_str} in {self.lib._name})")
         if version > max_version:
-            max_version_str = "v{:d}.{:d}".format(*max_version)
-            raise RuntimeError(f"SDK version {max_version_str} or lower required (your version is {version_str})")
+            max_version_str = "v{:d}.{:03d}".format(*max_version)
+            raise RuntimeError(f"SDK version {max_version_str} or lower required (your version is {version_str} in {self.lib._name})")
 
         self.h = None
         self.open(address=address, group=group)
