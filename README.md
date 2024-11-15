@@ -124,6 +124,9 @@ Thanks to the following for contributions:
 
 ### Changelog
 
+#### 1.400.3
+* Bump up minimum SDK version
+
 #### 1.400.2
 * Bugfix for non-simultaneous moves on stages
 * SensapexDevice.is_stage is now available (and can be overridden with an init arg)
